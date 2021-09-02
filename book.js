@@ -1,14 +1,20 @@
 const searchBook = () => {
+    // search field 
     const searchField = document.getElementById("search-field");
     const searchText = searchField.value;
+    searchField.value = "";
     searchField.textContent = "";
+
     if (searchText.length === "") {
-        document.getElementById("write-something").innerText = `Please write something`
+        // no data warning
+        document.getElementById("write-something").innerHTML = `<h3 class=" text-danger"> Something went wrong please try again later </h3>`
     }
 
     else {
         // load data
-        const url = `http://openlibrary.org/search.json?q=${searchText}`
+        const url = `https://openlibrary.org/search.json?q=${searchText}`
+
+
 
         fetch(url)
             .then(response => response.json())
@@ -19,22 +25,25 @@ const searchBook = () => {
 }
 
 const displaySearchResult = docs => {
-    console.log(docs.length)
+
     const searchResult = document.getElementById("search-result");
 
-    // if(docs.length == 0) {
+    // result count 
+    document.getElementById("book-number").innerHTML = `<h1 class="bg-dark text-warning text-center">Results found ${docs.length} </h1>`
 
-    // }
+    if (docs.length === 0) {
+        // no result 
+        document.getElementById("no-results").innerHTML = `<h3 class=" text-danger"> no result found </h3>`
+    }
+    searchResult.textContent = "";
 
     docs.forEach(doc => {
-        console.log(doc)
-
-
+        // dynamic div
         const div = document.createElement('div');
-        div.classList.add('col')
+        div.classList.add('col');
         div.innerHTML = `
-            <div onclick="loadBookDetail()" class="card">
-               
+            <div class="card">
+            <img src="https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h1 class="card-title">Book:  ${doc.title}</h1>
                     <h2 class="card-title">Author: ${doc.author_name[0]}</h2>
